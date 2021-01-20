@@ -18,15 +18,16 @@ public class IndexController {
 
     public IndexController() {
         String url = "jdbc:mysql://localhost:3306/world?useSSL=false"; //	user=root;password=password";
-        //  String url = "jdbc:sqlserver://localhost:1433;databaseName=world;";
+        // String url = "jdbc:sqlserver://localhost:1433;databaseName=world;";
 
         try {
-            con = DriverManager.getConnection(url, "root", "password");
+            con = DriverManager.getConnection(url, "sa", "password");
         } catch (Exception except) {
             System.out.println(except.getMessage());
             SQLException ex = new SQLException("Connection Failed: " + except.getMessage());
         }
     }
+
     //  http://localhost:8080/districts?district
     //  http://localhost:8080/districts?district=Utah
     @RequestMapping("districts")
@@ -54,9 +55,36 @@ public class IndexController {
             SQLException ex = new SQLException("Query or Connection Failed: " + except.getMessage());
         }
         model.addAttribute("title", "First JDBC Application");
-        model.addAttribute("cities", cities);
+        model.addAttribute("city", cities);
         model.addAttribute("population", population);
         model.addAttribute("district", district);
         return "cities";
     }
+
+    @RequestMapping("country")
+    public String country(Model model) throws Exception {
+        List<Country> countries = new ArrayList<>();
+
+        try {
+            Statement stmt = con.createStatement();
+            String query = "SELECT country.Name, Continent, country.Population, LifeExpectancy,city.name as 'Capital' FROM Country\n" +
+                    "join city on city.CountryCode=country.code ";
+
+
+            ResultSet results = stmt.executeQuery(query);
+            //  retrieve all rows from the result set
+            while (results.next()) {
+
+                Country Country = new Country(results.getString("name"), results.getString("continent"), results.getInt("population"), results.getInt("lifeExpectancy"), results.getString("capital"));
+                countries.add(Country);                       //  this will be our list of cities to save to our web page
+            }
+        } catch (Exception except) {
+            System.out.println(except.getMessage());
+            SQLException ex = new SQLException("Query or Connection Failed: " + except.getMessage());
+        }
+        model.addAttribute("title", "First JDBC Application");
+        model.addAttribute("josh", countries);
+        return "country";
+    }
 }
+
