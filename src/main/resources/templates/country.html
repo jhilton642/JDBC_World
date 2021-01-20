@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+<head lang="en">
+    <title>${title}</title>
+</head>
+<body>
+
+<h2>Edge Tech Academy</h2>
+
+<table class="table table-striped">
+    <tr>
+        <th>Country Name</th>
+        <th>Continent</th>
+        <th>Population</th>
+        <th>Life Expectancy</th>
+        <th>Capital</th>
+    </tr>
+    <tr th:each="country : ${josh}">
+        <td th:text="${country.name}">City Name</td>
+        <td th:text="${country.continent}">District</td>
+        <td th:text="${country.population}">Population</td>
+        <td th:text="${country.lifeExpectancy}">Life Expectancy</td>
+        <td th:text="${country.capital}">Capital</td>
+    </tr>
+</table>
+
+</body>
+</html>
